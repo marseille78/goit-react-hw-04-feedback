@@ -1,0 +1,13 @@
+.statistics {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.statistics-item {
+  font-size: 18px;
+}
+
+.statistics-item:not(:last-child) {
+  margin-bottom: 15px;
+}
