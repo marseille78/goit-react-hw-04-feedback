@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useState } from 'react';
 import Statistics from './statistics';
 import FeedbackOptions from './feedback-options';
 import Section from './section';
@@ -16,38 +16,17 @@ const initialState = {
   bad: 0
 }
 
-function feedbackReducer(state, action) {
-  const { GOOD, NEUTRAL, BAD } = types;
-
-  switch (action.type) {
-    case GOOD:
-      return {
-        ...state,
-        good: state[GOOD] + 1
-      };
-    case NEUTRAL:
-      return {
-        ...state,
-        neutral: state[NEUTRAL] + 1
-      };
-    case BAD:
-      return {
-        ...state,
-        bad: state[BAD] + 1
-      };
-    default:
-      throw new Error();
-  }
-}
-
 export const App = () => {
 
-  const [state, dispatch] = useReducer(feedbackReducer, initialState);
+  const [state, setState] = useState(initialState);
 
   const { good, neutral, bad } = state;
 
   const handleLeaveFeedback = (field) => {
-    dispatch({ type: field });
+    setState(state => ({
+      ...state,
+      [field]: state[field] + 1
+    }))
   }
 
   const countTotalFeedback = () => {
@@ -60,6 +39,8 @@ export const App = () => {
       : 0;
   }
 
+  const total = countTotalFeedback()
+
   return (
     <>
       <Section title="Please leave feedback">
@@ -67,13 +48,13 @@ export const App = () => {
       </Section>
 
       {
-        countTotalFeedback() > 0
+        total > 0
           ? (<Section title='Statistics'>
             <Statistics
               good={ good }
               neutral={ neutral }
               bad={ bad }
-              total={ countTotalFeedback() }
+              total={ total }
               positivePercentage={ countPositiveFeedbackPercentage() }
             />
           </Section>)
